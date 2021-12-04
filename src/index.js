@@ -7,9 +7,20 @@ const state = {}
 const dohServer = 'dns.google'
 const protocols = ['http', 'https', 'ftp']
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener(async () => {
 	chrome.storage.sync.set({ dohServer })
 	console.log(`DoH server set to "${dohServer}" (default)`)
+
+	// run on current tab
+	
+	let [ tab ] = await chrome.tabs.query({ 
+		active: true, 
+		currentWindow: true 
+	})
+
+	updateHostname(tab.id, tab.url)
+	await updateStatus(tab.id)
+	updateIcon(tab.id)
 })
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
