@@ -63,7 +63,7 @@ function updateHostname(tabId, url) {
 
 	state[tabId] = {
 		hostname: hostname,
-		status: 'default',
+		status: 'unsupported',
 	}
 }
 
@@ -88,7 +88,7 @@ async function updateStatus(tabId) {
 		if (response2.rcode != 'SERVFAIL') {
 			state[tabId].status = 'bogus'
 		} else {
-			state[tabId].status = 'default'
+			state[tabId].status = 'unsupported'
 		}
 	} else if (response.flag_ad) {
 		state[tabId].status = 'secure'
@@ -132,33 +132,21 @@ async function dohQuery(qname, dohServer, dnssec=true) {
 }
 
 function updateIcon(tabId) {
-	console.log(`updateIcon for ${tabId}`)
+	const status = state[tabId].status
+	console.log(`updateIcon for ${tabId} to ${status}`)
 
-	let color
-	switch (state[tabId].status) {
-		case 'secure':
-			color = 'green'
-			break
-		case 'insecure':
-			color = 'blue'
-			break
-		case 'bogus':
-			color = 'red'
-			break
-		default:
-			color = 'grey'
-	}
+	chrome.action.setIcon({
+		path: {
+			16: `images/${status}/16.png`,
+			32: `images/${status}/32.png`,
+			48: `images/${status}/48.png`,
+			128: `images/${status}/128.png`,
+		}
+	})
 
-	console.log(`new icon for ${tabId} (${state[tabId].status}): ${color}`)
-
-	const canvas = new OffscreenCanvas(16, 16)
-	const context = canvas.getContext('2d')
-	context.clearRect(0, 0, 16, 16)
-	context.fillStyle = color
-	context.fillRect(0, 0, 16, 16)
-	const imageData = context.getImageData(0, 0, 16, 16)
-	chrome.action.setIcon({ imageData: imageData }, () => { /* ... */ })
-
-	// chrome.action.setBadgeBackgroundColor({color:"blue"})
-	// chrome.action.setBadgeText({text:"3"})
+	const capStatus = status.charAt(0).toUpperCase() + status.slice(1);
+	chrome.action.setTitle({
+		tabId,
+		title: `DNSSEC Status: ${capStatus}`,
+	})
 }

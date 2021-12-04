@@ -2,7 +2,7 @@ const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WebpackImagesResizer = require('webpack-images-resizer')
 
-const files = ['default', 'loading', 'secure', 'insecure', 'bogus']
+const files = ['unsupported', 'secure', 'insecure', 'bogus']
 const sizes = [16, 32, 48, 128]
 
 let resizers = []
