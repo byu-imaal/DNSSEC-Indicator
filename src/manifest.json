@@ -1,0 +1,32 @@
+{
+	"name": "DNSSEC Check",
+	"description": "__INJECTED_BY_WEBPACK__",
+	"version": "__INJECTED_BY_WEBPACK__",
+	"manifest_version": 3,
+	"permissions": [
+		"tabs",
+		"storage"
+	],
+	"host_permissions": [
+		"https://*/"
+	],
+	"background": {
+		"service_worker": "__INJECTED_BY_WEBPACK__",
+		"type": "module"
+	},
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+		  "16": "/images/unsupported/16.png",
+		  "32": "/images/unsupported/32.png",
+		  "48": "/images/unsupported/48.png",
+		  "128": "/images/unsupported/128.png"
+		}
+	},
+	"icons": {
+	  "16": "/images/unsupported/16.png",
+	  "32": "/images/unsupported/32.png",
+	  "48": "/images/unsupported/48.png",
+	  "128": "/images/unsupported/128.png"
+	}
+}
