@@ -57,7 +57,14 @@ module.exports = {
 					}
 				},
 				// copy popup
-				{ from: 'static' }
+				{
+					from: 'static',
+					transform(content, path) {
+						return content.toString().replaceAll(
+							/..\/images\/(.*)\.(.*)/ig, 
+							'images/$1/128.$2')
+					}
+				}
 			]
 		}),
 		...resizers,
