@@ -5,9 +5,9 @@ import { Buffer } from 'buffer/' // the slash is required
 
 const state = {}
 
-const dohServer = 'dns.google'
-const protocols = ['http', 'https', 'ftp']
-const retryFrequency = 1000
+const defaultDohServer = 'dns.google'
+const defaultProtocols = ['http', 'https', 'ftp']
+const defaultRetryFrequency = 1000
 
 class DohError extends Error {
 	constructor(message) {
@@ -17,9 +17,20 @@ class DohError extends Error {
 }
 
 chrome.runtime.onInstalled.addListener(async () => {
-	// TODO check if value already exists before overwriting it with the default
-	chrome.storage.sync.set({ dohServer })
-	console.log(`DoH server set to "${dohServer}" (default)`)
+
+	const data = await chrome.storage.sync.get({
+		dohServer: defaultDohServer,
+		protocols: defaultProtocols,
+		retryFrequency: defaultRetryFrequency,
+	})
+
+	await chrome.storage.sync.set({
+		dohServer: data.dohServer,
+		protocols: data.protocols,
+		retryFrequency: data.retryFrequency,
+	})
+	
+	console.log(`DoH server set to "${data.dohServer}" (default)`)
 
 	// run on all active tabs
 
@@ -28,7 +39,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 	})
 
 	activeTabs.forEach(async tab => {
-		updateHostname(tab.id, tab.url)
+		await updateHostname(tab.id, tab.url)
 		await updateStatus(tab.id)
 		updateIcon(tab.id)
 	})
@@ -51,7 +62,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 			}
 		}
 
-		updateHostname(tabId, url)
+		await updateHostname(tabId, url)
 		await updateStatus(tabId)
 		updateIcon(tabId)
 	}
@@ -73,7 +84,7 @@ chrome.tabs.onActivated.addListener(async activeInfo => {
 		}
 	} else {
 		const tab = await chrome.tabs.get(tabId)
-		updateHostname(tabId, tab.url)
+		await updateHostname(tabId, tab.url)
 		await updateStatus(tabId)
 		updateIcon(tabId)
 	}
@@ -83,7 +94,7 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 	delete state[tabId]
 })
 
-function updateHostname(tabId, url) {
+async function updateHostname(tabId, url) {
 	let hostname = ''
 
 	try {
@@ -93,6 +104,8 @@ function updateHostname(tabId, url) {
 
 		// remove the colon
 		const protocol = url.protocol.substring(0, url.protocol.length - 1)
+
+		const { protocols } = await chrome.storage.sync.get('protocols')
 
 		if (protocols.includes(protocol)) {
 			hostname = url.hostname
@@ -143,6 +156,7 @@ async function updateStatus(tabId) {
 				clearTimeout(state[tabId].retryTimeout)
 			}
 			
+			const { retryFrequency } = await chrome.storage.sync.get('retryFrequency')
 			state[tabId].retryTimeout = setTimeout(async () => {
 				await updateStatus(tabId)
 				updateIcon(tabId)
