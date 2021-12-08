@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -8,7 +9,7 @@ const package = require('./package.json')
 
 const mainFile = 'background.js'
 
-const files = ['unsupported', 'secure', 'insecure', 'bogus']
+const files = fs.readdirSync(path.join(__dirname, 'images'))
 const sizes = [16, 32, 48, 128]
 
 let resizers = []
@@ -16,9 +17,10 @@ sizes.forEach(size => {
 
 	let images = []
 	files.forEach(file => {
+		const parsed = path.parse(file)
 		images.push({
-			src: path.resolve(__dirname, `images/${file}.png`),
-			dest: `images/${file}/${size}.png`,
+			src: path.resolve(__dirname, `images/${parsed.name}${parsed.ext}`),
+			dest: `images/${parsed.name}/${size}${parsed.ext}`,
 		})
 	})
 	resizers.push(new WebpackImagesResizer(images, { width: size, height: size }))
@@ -26,10 +28,10 @@ sizes.forEach(size => {
 
 module.exports = {
 	mode: 'production',
-    output: {
-        path: path.resolve(__dirname, 'dist'),
+	output: {
+		path: path.resolve(__dirname, 'dist'),
 		filename: mainFile,
-    },
+	},
 	plugins: [
 		new CleanWebpackPlugin(), // delete dist folder
 		new webpack.DefinePlugin({
