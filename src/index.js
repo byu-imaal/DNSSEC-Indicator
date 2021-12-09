@@ -29,8 +29,11 @@ chrome.runtime.onInstalled.addListener(async () => {
 		protocols: data.protocols,
 		retryFrequency: data.retryFrequency,
 	})
-	
-	console.log(`DoH server set to "${data.dohServer}" (default)`)
+
+	console.log(`Current settings:
+	dohServer: ${data.dohServer}
+	protocols: ${data.protocols}
+	retryFrequency: ${data.retryFrequency}`)
 
 	// run on all active tabs
 
@@ -94,6 +97,27 @@ chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 	delete state[tabId]
 })
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	if (request.type == 'status') {
+		chrome.tabs.query({
+			active: true,
+			currentWindow: true,
+		}, ([tab]) => {
+			let url
+			try {
+				url = new URL(tab.url)
+			} catch (e) {
+				url = { origin: '<invalid>' }
+			}
+			sendResponse({
+				domain: url.origin,
+				status: state[tab.id].status,
+			})
+		})
+		return true // indicate resopnse is asyncronous
+	}
+})
+
 async function updateHostname(tabId, url) {
 	let hostname = ''
 
@@ -149,13 +173,13 @@ async function updateStatus(tabId) {
 		}
 	} catch (e) {
 		if (e instanceof DohError) {
-			
+
 			state[tabId].status = 'error'
 
 			if (state[tabId].retryTimeout) {
 				clearTimeout(state[tabId].retryTimeout)
 			}
-			
+
 			const { retryFrequency } = await chrome.storage.sync.get('retryFrequency')
 			state[tabId].retryTimeout = setTimeout(async () => {
 				await updateStatus(tabId)

@@ -1,10 +1,129 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="popup.css">
-  </head>
-  <body>
-	<label>DoH Server <input id="dohServerField" type="text"/></label>
-    <script src="popup.js"></script>
-  </body>
+
+<head>
+	<link rel="stylesheet" href="popup.css">
+	<script src="popup.js" defer></script>
+</head>
+
+<body>
+
+	<header>
+		<img id="status-icon" src="../images/unsupported.png"/>
+		<div>DNSSEC Check</div>
+	</header>
+
+	<div class="content">
+
+		<div id="status-pane" class="content-pane active">
+			<div>
+				<div>The domain</div>
+				<div id="domain">something.really.long.so.it.can.wrap.www.example.com</div>
+				<div>is</div>
+				<div id="status">Secure</div>
+			</div>
+		</div>
+
+		<div id="settings-pane" class="content-pane">
+			<div class="setting">
+				<label for="dohServerField">
+					<span class="title">DoH Server</span>
+					<span class="desc">The domain or IP address of the DNS over HTTPS enabled server to query</span>
+				</label>
+				<input id="dohServerField" type="text" placeholder="dns.google"/>
+			</div>
+			<div class="setting">
+				<label for="protocolsField">
+					<span class="title">Protocols</span>
+					<span class="desc">A comma separated list of protocols to test</span>
+				</label>
+				<input id="protocolsField" type="text" placeholder="http, https, ftp"/>
+			</div>
+			<div class="setting">
+				<label for="retryFrequencyField">
+					<span class="title">Retry Frequency</span>
+					<span class="desc">The time between retries in milliseconds</span>
+				</label>
+				<input id="retryFrequencyField" type="number" placeholder="1000"/>
+			</div>
+		</div>
+
+		<div id="info-pane" class="content-pane">
+
+			<div>
+				This extension uses DNS-over-HTTPS to check the DNSSEC status for each domain you visit.
+				The status of each domain is indicated by the color of the extension icon as described below.
+			</div>
+
+			<legend>
+				<div class="legend-item">
+					<span class="title">
+						<img src="../images/unsupported.png"/>
+						<span>Unsupported</span>
+					</span>
+					<span class="desc">
+						The protocol is not in the protocols list, or the query returned a SERVFAIL
+					</span>
+				</div>
+				<div class="legend-item">
+					<span class="title">
+						<img src="../images/secure.png"/>
+						<span>Secure</span>
+					</span>
+					<span class="desc">
+						The query for the domain was successful and contained the AD bit
+					</span>
+				</div>
+				<div class="legend-item">
+					<span class="title">
+						<img src="../images/insecure.png"/>
+						<span>Insecure</span>
+					</span>
+					<span class="desc">
+						The query for the domain was successful and did not contain the AD bit
+					</span>
+				</div>
+				<div class="legend-item">
+					<span class="title">
+						<img src="../images/bogus.png"/>
+						<span>Bogus</span>
+					</span>
+					<span class="desc">
+						The query for the domain returned a SERVFAIL, but a second query for the domain with the CD bit was successful
+					</span>
+				</div>
+				<div class="legend-item">
+					<span class="title">
+						<img src="../images/error.png"/>
+						<span>Error</span>
+					</span>
+					<span class="desc">
+						The query for the domain could not be completed, likely because of internet connectivity issues
+					</span>
+				</div>
+			</legend>
+
+			<div>
+				Check out our
+				<a href="https://github.com/TrevinAvery/DNSSEC-Check" target="_blank" rel="noopener noreferrer">GitHub</a>
+			</div>
+		</div>
+	</div>
+
+	<nav>
+		<div class="nav-item nav-item-status active" data-pane="status-pane">
+			<div class="nav-icon"></div>
+			<span>Status</span>
+		</div>
+		<div class="nav-item nav-item-settings" data-pane="settings-pane">
+			<div class="nav-icon"></div>
+			<span>Settings</span>
+		</div>
+		<div class="nav-item nav-item-info" data-pane="info-pane">
+			<div class="nav-icon"></div>
+			<span>Info</span>
+		</div>
+	</nav>
+</body>
+
 </html>

@@ -60,10 +60,19 @@ module.exports = {
 				{
 					from: 'static',
 					transform(content, path) {
-						return content.toString().replaceAll(
-							/..\/images\/(.*)\.(.*)/ig, 
-							'images/$1/128.$2')
+						return content.toString()
+							.replaceAll(
+								/..\/assets\/(.*)\.(.*)/ig, 
+								'assets/$1.$2')
+							.replaceAll(
+								/..\/images\/(.*)\.(.*)/ig, 
+								'images/$1/128.$2')
 					}
+				},
+				// copy assets
+				{
+					from: 'assets',
+					to: 'assets',
 				}
 			]
 		}),
