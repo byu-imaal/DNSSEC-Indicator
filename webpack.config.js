@@ -42,8 +42,8 @@ module.exports = {
 			patterns: [
 				// copy version and description from package.json to manifest.json
 				{
-					from: 'src/manifest.json',
-					to: 'manifest.json',
+					context: 'src',
+					from: 'manifest.json',
 					transform(content, path) {
 						// copy-webpack-plugin passes a buffer
 						let manifest = JSON.parse(content.toString())
@@ -58,7 +58,8 @@ module.exports = {
 				},
 				// copy popup
 				{
-					from: 'static',
+					context: 'src',
+					from: 'popup.*',
 					transform(content, path) {
 						return content.toString()
 							.replaceAll(
@@ -76,6 +77,7 @@ module.exports = {
 				}
 			]
 		}),
+		// copy icons
 		...resizers,
 	],
 	optimization: {
