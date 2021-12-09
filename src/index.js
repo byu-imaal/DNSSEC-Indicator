@@ -243,10 +243,10 @@ function updateIcon(tabId) {
 	chrome.action.setIcon({
 		tabId,
 		path: {
-			16: `images/${status}/16.png`,
-			32: `images/${status}/32.png`,
-			48: `images/${status}/48.png`,
-			128: `images/${status}/128.png`,
+			16: `icons/${status}/16.png`,
+			32: `icons/${status}/32.png`,
+			48: `icons/${status}/48.png`,
+			128: `icons/${status}/128.png`,
 		}
 	})
 

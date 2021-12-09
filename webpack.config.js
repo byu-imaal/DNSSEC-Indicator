@@ -9,21 +9,21 @@ const package = require('./package.json')
 
 const mainFile = 'background.js'
 
-const files = fs.readdirSync(path.join(__dirname, 'images'))
+const files = fs.readdirSync(path.join(__dirname, 'icons'))
 const sizes = [16, 32, 48, 128]
 
 let resizers = []
 sizes.forEach(size => {
 
-	let images = []
+	let icons = []
 	files.forEach(file => {
 		const parsed = path.parse(file)
-		images.push({
-			src: path.resolve(__dirname, `images/${parsed.name}${parsed.ext}`),
-			dest: `images/${parsed.name}/${size}${parsed.ext}`,
+		icons.push({
+			src: path.resolve(__dirname, `icons/${parsed.name}${parsed.ext}`),
+			dest: `icons/${parsed.name}/${size}${parsed.ext}`,
 		})
 	})
-	resizers.push(new WebpackImagesResizer(images, { width: size, height: size }))
+	resizers.push(new WebpackImagesResizer(icons, { width: size, height: size }))
 })
 
 module.exports = {
@@ -65,8 +65,8 @@ module.exports = {
 								/..\/assets\/(.*)\.(.*)/ig, 
 								'assets/$1.$2')
 							.replaceAll(
-								/..\/images\/(.*)\.(.*)/ig, 
-								'images/$1/128.$2')
+								/..\/icons\/(.*)\.(.*)/ig, 
+								'icons/$1/128.$2')
 					}
 				},
 				// copy assets

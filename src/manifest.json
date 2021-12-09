@@ -17,16 +17,16 @@
 	"action": {
 		"default_popup": "popup.html",
 		"default_icon": {
-		  "16": "/images/unsupported/16.png",
-		  "32": "/images/unsupported/32.png",
-		  "48": "/images/unsupported/48.png",
-		  "128": "/images/unsupported/128.png"
+		  "16": "/icons/unsupported/16.png",
+		  "32": "/icons/unsupported/32.png",
+		  "48": "/icons/unsupported/48.png",
+		  "128": "/icons/unsupported/128.png"
 		}
 	},
 	"icons": {
-	  "16": "/images/unsupported/16.png",
-	  "32": "/images/unsupported/32.png",
-	  "48": "/images/unsupported/48.png",
-	  "128": "/images/unsupported/128.png"
+	  "16": "/icons/unsupported/16.png",
+	  "32": "/icons/unsupported/32.png",
+	  "48": "/icons/unsupported/48.png",
+	  "128": "/icons/unsupported/128.png"
 	}
 }
