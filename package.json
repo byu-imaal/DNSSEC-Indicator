@@ -1,7 +1,7 @@
 {
   "name": "dnssec-indicator",
   "version": "0.0.1",
-  "description": "A Google Chrome extension that uses DNS-over-HTTPS to check the DNSSEC status for each domain you visit",
+  "description": "A Google Chrome extension that uses DNS-over-HTTPS (DoH) to check the DNSSEC status for each domain you visit",
   "scripts": {
     "build": "npx webpack --progress --color",
     "dev": "NODE_ENV=development npm run build",
