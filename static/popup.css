@@ -81,12 +81,15 @@ nav .nav-item:hover {
 
 
 nav .nav-item.nav-item-status .nav-icon {
+	mask: url("../assets/lock.svg") no-repeat center/contain;
 	-webkit-mask: url("../assets/lock.svg") no-repeat center/contain;
 }
 nav .nav-item.nav-item-settings .nav-icon {
+	mask: url("../assets/cog.svg") no-repeat center/contain;
 	-webkit-mask: url("../assets/cog.svg") no-repeat center/contain;
 }
 nav .nav-item.nav-item-info .nav-icon {
+	mask: url("../assets/information.svg") no-repeat center/contain;
 	-webkit-mask: url("../assets/information.svg") no-repeat center/contain;
 }
 
