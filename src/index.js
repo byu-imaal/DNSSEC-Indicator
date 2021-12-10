@@ -102,13 +102,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		chrome.tabs.query({
 			active: true,
 			currentWindow: true,
-		}, ([tab]) => {
-			let url
-			try {
-				url = new URL(tab.url)
-			} catch (e) {
-				url = { origin: '<invalid>' }
+		}, async ([tab]) => {
+			const url = new URL(tab.url)
+
+			if (!(tab.id in state) || !('status' in state[tab.id])) {
+				await updateHostname(tab.id, url)
+				await updateStatus(tab.id)
+				updateIcon(tab.id)
 			}
+
 			sendResponse({
 				domain: url.origin,
 				status: state[tab.id].status,
