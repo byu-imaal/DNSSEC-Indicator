@@ -60,13 +60,17 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 				delete state[tabId].retryTimeout
 			}
 
-			if (state[tabId].hostname == url.hostname && state[tabId].status != 'error') {
-				return
+			if (state[tabId].hostname != url.hostname) {
+				await updateHostname(tabId, url)
+				await updateStatus(tabId)
+			} else if (state[tabId].status == 'error') {
+				await updateStatus(tabId)
 			}
+		} else {
+			await updateHostname(tabId, url)
+			await updateStatus(tabId)
 		}
 
-		await updateHostname(tabId, url)
-		await updateStatus(tabId)
 		updateIcon(tabId)
 	}
 })
