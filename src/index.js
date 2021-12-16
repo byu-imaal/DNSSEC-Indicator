@@ -63,7 +63,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 			if (state[tabId].hostname != url.hostname) {
 				await updateHostname(tabId, url)
 				await updateStatus(tabId)
-			} else if (state[tabId].status == 'error') {
+			} else if (state[tabId].status == 'error' || state[tabId].status === undefined) {
 				await updateStatus(tabId)
 			}
 		} else {
